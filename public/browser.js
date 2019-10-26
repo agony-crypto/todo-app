@@ -8,13 +8,13 @@ function itemTemplate(item) {
   </li>`;
 }
 
-// initial page load render
+// Initial page load render
 let ourHTML = items.map((item) => {
   return itemTemplate(item);
 }).join('');
 document.getElementById("item-list").insertAdjacentHTML("beforeend", ourHTML);
 
-// create feature
+// Create Feature
 let createField = document.getElementById("create-field");
 
 document.getElementById("create-form").addEventListener("submit", (e) => {
@@ -29,8 +29,8 @@ document.getElementById("create-form").addEventListener("submit", (e) => {
   });
 });
 
+//Delete Feature
 document.addEventListener("click", (e) => {
-  //delete feature
   console.log(e.target)
   if (e.target.classList.contains("delete-me")) {
     if (confirm("Do you really want to delete this item permanently?")) {
@@ -42,7 +42,7 @@ document.addEventListener("click", (e) => {
     }
   }
 
-  //update feature
+  //Update Feature
   if (e.target.classList.contains("edit-me")) {
     let toDoItem = e.target.parentElement.parentElement.querySelector(".item-text");
     const userInput = prompt("Enter you desired new text", toDoItem.innerHTML);
