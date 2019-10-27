@@ -4,18 +4,6 @@ const sanitizeHTML = require("sanitize-html");
 const db = require('./db').collection('items');
 
 const app = express();
-// const connectionString = 'mongodb+srv://todoAppUser:P@ssw0rd@cluster0-nwzyt.mongodb.net/TodoApp?retryWrites=true&w=majority';
-// let port = process.env.PORT;
-// if (port === null || port === "" || port === undefined) {
-//   port = 3000;
-// }
-
-// let db;
-
-// mongodb.connect(connectionString, { useUnifiedTopology: true }, (err, client) => {
-//   db = client.db();
-//   app.listen(port, () => console.log(`Listening on port ${port}`));
-// });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
