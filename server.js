@@ -1,20 +1,21 @@
 const express = require("express");
 const mongodb = require("mongodb");
 const sanitizeHTML = require("sanitize-html");
+const db = require('./db').collection('items');
 
 const app = express();
-const connectionString = 'mongodb+srv://todoAppUser:P@ssw0rd@cluster0-nwzyt.mongodb.net/TodoApp?retryWrites=true&w=majority';
-let port = process.env.PORT;
-if (port === null || port === "" || port === undefined) {
-  port = 3000;
-}
+// const connectionString = 'mongodb+srv://todoAppUser:P@ssw0rd@cluster0-nwzyt.mongodb.net/TodoApp?retryWrites=true&w=majority';
+// let port = process.env.PORT;
+// if (port === null || port === "" || port === undefined) {
+//   port = 3000;
+// }
 
-let db;
+// let db;
 
-mongodb.connect(connectionString, { useUnifiedTopology: true }, (err, client) => {
-  db = client.db();
-  app.listen(port, () => console.log(`Listening on port ${port}`));
-});
+// mongodb.connect(connectionString, { useUnifiedTopology: true }, (err, client) => {
+//   db = client.db();
+//   app.listen(port, () => console.log(`Listening on port ${port}`));
+// });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -34,7 +35,7 @@ function passwordProtected(req, res, next) {
 app.use(passwordProtected);
 
 app.get('/', (req, res) => {
-  db.collection('items').find().toArray((err, items) => {
+  db.find().toArray((err, items) => {
     res.send(`
     <!DOCTYPE html>
     <html>
@@ -76,21 +77,21 @@ app.get('/', (req, res) => {
 app.post('/create-item', (req, res) => {
   const userInput = sanitizeHTML(req.body.text, { allowedTags: [], allowedAttributes: [] });
   if (userInput) {
-    db.collection('items').insertOne({ text: userInput }, (err, info) => {
-      res.json(info.ops[0]);
-    });
+    db.insertOne({ text: userInput }, (err, info) => { res.json(info.ops[0]); });
   }
 });
 
 app.post('/update-item', (req, res) => {
   const userInput = sanitizeHTML(req.body.text, { allowedTags: [], allowedAttributes: [] });
-  db.collection('items').findOneAndUpdate({ _id: new mongodb.ObjectID(req.body.id) }, { $set: { text: userInput } }, () => {
+  db.findOneAndUpdate({ _id: new mongodb.ObjectID(req.body.id) }, { $set: { text: userInput } }, () => {
     res.send("Success!!");
   });
 });
 
 app.post('/delete-item', (req, res) => {
-  db.collection('items').deleteOne({ _id: new mongodb.ObjectID(req.body.id) }, () => {
+  db.deleteOne({ _id: new mongodb.ObjectID(req.body.id) }, () => {
     res.send("Success!!");
   });
 });
+
+module.exports = app;
